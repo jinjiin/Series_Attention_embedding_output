@@ -1,0 +1,70 @@
+{
+    "name": "QA_inference",
+    "n_gpu": 1,
+
+    "arch": {
+        "type": "QANet",
+        "args": {
+            "n_head":5,
+            "embedding_dim":50,
+            "feature_concat":"l_lr",
+            "d_k":64,
+            "attention":true,
+            "gate":null
+        }
+    },
+    "data_loader": {
+        "type": "dataLoader",
+        "args":{
+            "mode":"train",
+            "time_len":24,
+            "embed_path":"embed_50_no_l2.npy",
+            "batch_size":256,
+            "num_workeres":4,
+            "shuffle":true
+        }
+    },
+    "valid_loader": {
+        "type": "dataLoader",
+        "args":{
+            "mode":"valid",
+            "time_len":24,
+            "embed_path":"embed_50_no_l2.npy",
+            "batch_size":256,
+            "num_workeres":4,
+            "shuffle":true
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args":{
+            "lr": 0.0001
+        }
+    },
+    "loss": "mse_loss",
+    "metrics": "smape",
+    "lr_scheduler": {
+        "type": "ReduceLROnPlateau",
+        "args": {
+            "factor": 0.5,
+            "patience": 5,
+            "min_lr": 1e-07,
+            "verbose": true
+        }
+    },
+    "trainer": {
+        "epochs": 200,
+
+        "save_dir": "saved/",
+        "save_period": 5,
+        "verbosity": 2,
+
+        "monitor": "min val_rmse_loss",
+        "early_stop": 10,
+        "clip_max_norm":1,
+        "tensorboard": true,
+
+        "l2_regularization": true,
+        "l2_lambda": 0.001
+    }
+}

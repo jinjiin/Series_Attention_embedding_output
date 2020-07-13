@@ -1,0 +1,50 @@
+{
+    "name": "QA_inference",
+    "n_gpu": 1,
+
+    "arch": {
+        "type": "QANet",
+        "args": {
+            "n_head":5,
+            "embedding_dim":128,
+            "feature_concat":"l_out_lr",
+            "d_k":64,
+            "attention":true,
+            "gate":"cross"
+        }
+    },
+
+    "optimizer": {
+        "type": "RMSprop",
+        "args":{
+            "lr": 0.001,
+            "weight_decay": 1e-5
+        }
+    },
+    "loss": "mse_loss",
+    "metrics": "smape",
+    "lr_scheduler": {
+        "type": "ReduceLROnPlateau",
+        "args": {
+            "factor": 0.1,
+            "patience": 10,
+            "min_lr": 1e-06,
+            "verbose": true
+        }
+    },
+    "trainer": {
+        "epochs": 200,
+
+        "save_dir": "saved/",
+        "save_period": 5,
+        "verbosity": 2,
+
+        "monitor": "min val_rmse_loss",
+        "early_stop": 20,
+        "clip_max_norm":1,
+        "tensorboard": true,
+
+        "l2_regularization": true,
+        "l2_lambda": 1
+    }
+}
